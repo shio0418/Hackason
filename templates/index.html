@@ -6,7 +6,7 @@
   </head>
   <body>
     <h1>大喜利SNS</h1>
-    
+
     <h2>投稿一覧</h2>
     <div id="postlist"></div>
 
@@ -22,20 +22,20 @@
     <script>
       // 新しい投稿を送信する
       async function submitPost() {
-        const text = document.getElementById("post").value;
-        const response = await fetch("/posts", {
+        const text = document.getElementById("postText").value;
+        const response = await fetch("http://127.0.0.1:5000/posts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text })
+          body: JSON.stringify({ text }),
         });
         loadPosts(); // 投稿後に再表示
       }
 
       // 投稿を一覧表示
       async function loadPosts() {
-        const response = await fetch("/posts");
+        const response = await fetch("http://127.0.0.1:5000/posts");
         const posts = await response.json();
-        const postsDiv = document.getElementById("posts");
+        const postsDiv = document.getElementById("postlist");
         postsDiv.innerHTML = "";
         posts.forEach((post) => {
           postsDiv.innerHTML += `
@@ -50,12 +50,16 @@
 
       // いいね機能
       async function likePost(postId) {
-        await fetch(`/posts/${postId}/like`, { method: "POST" });
+        await fetch(`http://127.0.0.1:5000/posts/${postId}/like`, {
+          method: "POST",
+        });
         loadPosts(); // いいね後に再表示
       }
 
       //いいねボタン
-      <button onclick="likePost(post.id)" type="submit" name="name" value="値">いいね!</button>
+      <button onclick="likePost(post.id)" type="submit" name="name" value="値">
+        いいね!
+      </button>;
 
       // 大喜利回答を一覧表示
       async function loadReplies(postId) {
@@ -75,7 +79,12 @@
         await fetch(`/replies/${replyId}/vote`, { method: "POST" });
         loadReplies(); // 投票後に再表示
       }
-
+      document
+        .getElementById("postForm")
+        .addeventListener("submit", function (event) {
+          event.preventzdefault();
+          submitPost();
+        });
 
       loadPosts(); // 初期ロード
     </script>
