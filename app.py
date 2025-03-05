@@ -35,11 +35,21 @@ def insert_post_reply(post_id,text):
     conn.commit()
     conn.close()
 
+# 投稿を取得
+@app.route("/posts", methods=["GET"])
+def get_posts():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row #辞書型で取得
+    c = conn.cursor()
+    c.execute("SELECT * FROM posts ORDER BY id DESC")
+    posts = [{"id": row[0], "text": row[1], "likes": row[2]} for row in c.fetchall()]
+    conn.close()
+    return jsonify(posts)
 # 投稿
 @app.route("/posts", methods=["POST"])
 def add_post():
     ##ここを考える
-    data = request.json
+    data = request.get_json()
     text = data.get('text')
     if text:
         insert_post(text)
@@ -79,7 +89,7 @@ def like_post(post_id):
     else:
         conn.close()
         #投稿が存在しない場合のエラーメッセージ
-        return jsonify({})
+        return jsonify({'error': 'Post not found'}), 404
     return
 
 
