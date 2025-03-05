@@ -16,7 +16,7 @@ document
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data), // JSON形式で送信
+      body: JSON.stringify({ text: "投稿内容" }), // JSON形式で送信
     })
       .then((response) => response.json())
       .then((data) => {
