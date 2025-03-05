@@ -1,5 +1,9 @@
+<<<<<<< Updated upstream
 from flask import Flask, request, jsonify, render_template
 
+=======
+from flask import Flask, request
+>>>>>>> Stashed changes
 import sqlite3
 # Flaskアプリケーションのインスタンスを作成
 app = Flask(__name__)
@@ -21,6 +25,7 @@ def home():
     data = request.json
 
     return 'Hello, Flask!'
+<<<<<<< Updated upstream
 
 # データベースに接続し、データを挿入する関数
 def insert_post(text):
@@ -37,10 +42,14 @@ def insert_post_reply(post_id,text):
     conn.commit()
     conn.close()
 
+=======
+    
+>>>>>>> Stashed changes
 # 投稿
 @app.route("/posts", methods=["POST"])
 def add_post():
     ##ここを考える
+<<<<<<< Updated upstream
     data = request.json
     text = data.get('text')
     if text:
@@ -49,11 +58,15 @@ def add_post():
     else:
         return jsonify ({'message': 'No text provided'}), 400
 
+=======
+    return
+>>>>>>> Stashed changes
     
 # 大喜利回答
 @app.route("/replies", methods=["POST"])
 def add_reply():
     data = request.json
+<<<<<<< Updated upstream
     text = data.get('text')
     post_id = data.get('post_id')
     if post_id < 0:
@@ -63,6 +76,13 @@ def add_reply():
         return jsonify({'message': 'Post created successfully'}), 201
     else:
         return jsonify ({'message': 'No text provided'}), 400
+=======
+
+    post_id = data.get("")
+    
+    #ここを考える
+    return
+>>>>>>> Stashed changes
 
 # いいね
 @app.route("/posts/<int:post_id>/like", methods=["POST"])
