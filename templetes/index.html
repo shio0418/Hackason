@@ -5,6 +5,83 @@
     <title>大喜利SNS</title>
   </head>
   <body>
-    <h1 class="title">大喜利SNS</h1>
+    <h1>大喜利SNS</h1>
+
+    <h2>悩みを投稿</h2>
+    <input type="text" id="post" placeholder="悩みを書く" />
+    <button onclick="submitPost()">投稿</button>
+
+    <h2>投稿一覧</h2>
+    <div id="postlist"></div>
+
+    <h2>悩みを投稿</h2>
+    <form id="postForm">
+      <textarea id="postText" placeholder="何か投稿しよう！"></textarea>
+      <button type="submit">投稿する</button>
+    </form>
+
+    <h2>大喜利回答</h2>
+    <div id="replies"></div>
+
+    <script>
+      // 新しい投稿を送信する
+      async function submitPost() {
+        const text = document.getElementById("post").value;
+        const response = await fetch("/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        });
+        loadPosts(); // 投稿後に再表示
+      }
+
+      // 投稿を一覧表示
+      async function loadPosts() {
+        const response = await fetch("/posts");
+        const posts = await response.json();
+        const postsDiv = document.getElementById("posts");
+        postsDiv.innerHTML = "";
+        posts.forEach((post) => {
+          postsDiv.innerHTML += `
+            <p>
+              ${post.text} 
+              <button onclick="likePost(${post.id})">いいね</button>
+              <button onclick="loadReplies(${post.id})">回答を見る</button>
+            </p>
+          `;
+        });
+      }
+
+      // いいね機能
+      async function likePost(postId) {
+        await fetch(`/posts/${postId}/like`, { method: "POST" });
+        loadPosts(); // いいね後に再表示
+      }
+
+      //いいねボタン
+      <button onclick="likePost(post.id)" type="submit" name="name" value="値">いいね!</button>
+
+      // 大喜利回答を一覧表示
+      async function loadReplies(postId) {
+        const response = await fetch(`/replies/${postId}`);
+        const replies = await response.json();
+        const repliesDiv = document.getElementById("replies");
+        repliesDiv.innerHTML = "";
+        replies.forEach((reply) => {
+          repliesDiv.innerHTML += `
+            <p>${reply.text} <button onclick="voteReply(${reply.id})">投票</button></p>
+          `;
+        });
+      }
+
+      // 回答に投票する
+      async function voteReply(replyId) {
+        await fetch(`/replies/${replyId}/vote`, { method: "POST" });
+        loadReplies(); // 投票後に再表示
+      }
+
+
+      loadPosts(); // 初期ロード
+    </script>
   </body>
 </html>
