@@ -1,4 +1,6 @@
-from flask import Flask
+from flask import Flask, request, jsonify, render_template
+
+import sqlite3
 # Flaskアプリケーションのインスタンスを作成
 app = Flask(__name__)
 
@@ -16,12 +18,31 @@ init_db()
 # ルートURLにアクセスしたときの処理
 @app.route('/')
 def home():
+    data = request.json
+
     return 'Hello, Flask!'
 
+# データベースに接続し、データを挿入する関数
+def insert_post(text):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute('INSERT INTO posts (text) VALUES (?)', (text,))
+    conn.commit()
+    conn.close()
 # 投稿
 @app.route("/posts", methods=["POST"])
 def add_post():
     ##ここを考える
+    data = request.json
+    text = data.get('text')
+    if text:
+        insert_post(text)
+        return jsonify({'message': 'Post created successfully'}), 201
+    else:
+        return jsonify ({'message': 'No text provided'}), 400
+
+    print(data)
+
     return
     
 # 大喜利回答
