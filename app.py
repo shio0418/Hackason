@@ -18,9 +18,7 @@ init_db()
 # ルートURLにアクセスしたときの処理
 @app.route('/')
 def home():
-    data = request.json
-
-    return 'Hello, Flask!'
+    return render_template('index.html')
 
 # データベースに接続し、データを挿入する関数
 def insert_post(text):
@@ -30,11 +28,28 @@ def insert_post(text):
     conn.commit()
     conn.close()
 
+def insert_post_reply(post_id,text):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute('INSERT INTO replies (post_id,text) VALUES (?,?)', (post_id,text,))
+    conn.commit()
+    conn.close()
+
+# 投稿を取得
+@app.route("/posts", methods=["GET"])
+def get_posts():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row #辞書型で取得
+    c = conn.cursor()
+    c.execute("SELECT * FROM posts ORDER BY id DESC")
+    posts = [{"id": row[0], "text": row[1], "likes": row[2]} for row in c.fetchall()]
+    conn.close()
+    return jsonify(posts)
 # 投稿
 @app.route("/posts", methods=["POST"])
 def add_post():
     ##ここを考える
-    data = request.json
+    data = request.get_json()
     text = data.get('text')
     if text:
         insert_post(text)
@@ -46,8 +61,16 @@ def add_post():
 # 大喜利回答
 @app.route("/replies", methods=["POST"])
 def add_reply():
-    #ここを考える
-    return
+    data = request.json
+    text = data.get('text')
+    post_id = data.get('post_id')
+    if post_id < 0:
+        return jsonify({'message': 'Invalid post_id'}), 400
+    elif text:
+        insert_post_reply(post_id,text)
+        return jsonify({'message': 'Post created successfully'}), 201
+    else:
+        return jsonify ({'message': 'No text provided'}), 400
 
 # いいね
 @app.route("/posts/<int:post_id>/like", methods=["POST"])
@@ -66,7 +89,7 @@ def like_post(post_id):
     else:
         conn.close()
         #投稿が存在しない場合のエラーメッセージ
-        return jsonify({})
+        return jsonify({'error': 'Post not found'}), 404
     return
 
 

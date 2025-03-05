@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>大喜利SNS</title>
+  </head>
+  <body>
+    <h1>大喜利SNS</h1>
+
+    <h2>投稿一覧</h2>
+    <div id="postlist"></div>
+
+    <h2>悩みを投稿</h2>
+    <form id="postForm">
+      <textarea id="postText" placeholder="何か投稿しよう！"></textarea>
+      <button type="submit">投稿する</button>
+    </form>
+
+    <h2>大喜利回答</h2>
+    <div id="replies"></div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>
