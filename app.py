@@ -18,9 +18,7 @@ init_db()
 # ルートURLにアクセスしたときの処理
 @app.route('/')
 def home():
-    data = request.json
-
-    return 'Hello, Flask!'
+    return render_template('index.html')
 
 # データベースに接続し、データを挿入する関数
 def insert_post(text):
@@ -48,7 +46,7 @@ def add_post():
         return jsonify({'message': 'Post created successfully'}), 201
     else:
         return jsonify ({'message': 'No text provided'}), 400
-
+    return
     
 # 大喜利回答
 @app.route("/replies", methods=["POST"])
@@ -68,6 +66,20 @@ def add_reply():
 @app.route("/posts/<int:post_id>/like", methods=["POST"])
 def like_post(post_id):
     #ここを考える
+    # 1. 投稿が存在するかを確認する（postsテーブルの該当するpost_idを検索）
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM posts WHERE id = ?", (post_id,))
+    post = c.fetchone()
+    if post:
+        c. execute("UPDATE posts SET likes = likes + 1 WHERE id = ?", (post_id,))
+        conn.commit()
+        conn.close()
+        return jsonify({'messaage': 'Post liked sucessfully'}), 200
+    else:
+        conn.close()
+        #投稿が存在しない場合のエラーメッセージ
+        return jsonify({})
     return
 
 
