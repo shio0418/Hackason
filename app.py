@@ -17,6 +17,26 @@ init_db()
 @app.route('/')
 def home():
     return 'Hello, Flask!'
+
+# 投稿
+@app.route("/posts", methods=["POST"])
+def add_post():
+    ##ここを考える
+    return
+    
+# 大喜利回答
+@app.route("/replies", methods=["POST"])
+def add_reply():
+    #ここを考える
+    return
+
+# いいね
+@app.route("/posts/<int:post_id>/like", methods=["POST"])
+def like_post(post_id):
+    #ここを考える
+    return
+
+
 # アプリケーションを実行
 if __name__ == '__main__':
     app.run(debug=True)
