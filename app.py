@@ -18,9 +18,7 @@ init_db()
 # ルートURLにアクセスしたときの処理
 @app.route('/')
 def home():
-    data = request.json
-
-    return 'Hello, Flask!'
+    return render_template('index.html')
 
 # データベースに接続し、データを挿入する関数
 def insert_post(text):
