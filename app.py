@@ -30,6 +30,13 @@ def insert_post(text):
     conn.commit()
     conn.close()
 
+def insert_post_reply(post_id,text):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute('INSERT INTO replies (post_id,text) VALUES (?,?)', (post_id,text,))
+    conn.commit()
+    conn.close()
+
 # 投稿
 @app.route("/posts", methods=["POST"])
 def add_post():
@@ -46,8 +53,16 @@ def add_post():
 # 大喜利回答
 @app.route("/replies", methods=["POST"])
 def add_reply():
-    #ここを考える
-    return
+    data = request.json
+    text = data.get('text')
+    post_id = data.get('post_id')
+    if post_id < 0:
+        return jsonify({'message': 'Invalid post_id'}), 400
+    elif text:
+        insert_post_reply(post_id,text)
+        return jsonify({'message': 'Post created successfully'}), 201
+    else:
+        return jsonify ({'message': 'No text provided'}), 400
 
 # いいね
 @app.route("/posts/<int:post_id>/like", methods=["POST"])
