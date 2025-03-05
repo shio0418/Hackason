@@ -1,97 +1,66 @@
-// // フォームの送信イベント
-// document
-//   .getElementById("postForm")
-//   .addEventListener("submit", function (event) {
-//     event.preventDefault(); // フォームのデフォルトの送信を防ぐ
+// 新しい投稿を送信する
+async function submitPost() {
+  const text = document.getElementById("postText").value;
+  if (!text.trim()) return; // 空投稿を防ぐ
+  await fetch("/posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text }),
+  });
+  document.getElementById("postText").value = ""; // 投稿後に入力欄をクリア
+  loadPosts(); // 投稿後に一覧を更新
+}
 
-//     // ユーザーが入力したテキスト
-//     const text = document.getElementById("postText").value;
+// 投稿一覧を取得して表示
+async function loadPosts() {
+  const response = await fetch("/posts");
+  const posts = await response.json();
+  const postsDiv = document.getElementById("postlist");
+  postsDiv.innerHTML = "";
+  posts.forEach((post) => {
+    postsDiv.innerHTML += `
+        <p>
+          ${post.text}
+          <button onclick="likePost(${post.id})">♡</button> ${post.likes} いいね
+          <button onclick="loadReplies(${post.id})">回答を見る</button>
+        </p>
+      `;
+  });
+}
 
-//     // リクエストデータを作成
-//     const data = { text: text };
+// いいね機能
+async function likePost(postId) {
+  await fetch(`/posts/${postId}/like`, { method: "POST" });
+  loadPosts(); // 更新
+}
 
-//     // fetchを使ってサーバーにPOSTリクエストを送信
-//     fetch("http://127.0.0.1:5000/posts", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ text: "投稿内容" }), // JSON形式で送信
-//     })
-//       .then((response) => response.json())
-//       .then((data) => {
-//         if (data.message === "Post created successfully") {
-//           alert("投稿が成功しました！");
-//           // 新しい投稿を表示するために画面を更新
-//           loadPosts();
-//         } else {
-//           alert("投稿に失敗しました");
-//         }
-//       })
-//       .catch((error) => {
-//         console.error("エラー:", error);
-//       });
-//   });
+// 大喜利回答を取得して表示
+async function loadReplies(postId) {
+  const response = await fetch(`/replies/${postId}`);
+  const replies = await response.json();
+  const repliesDiv = document.getElementById("replies");
+  repliesDiv.innerHTML = "";
+  replies.forEach((reply) => {
+    repliesDiv.innerHTML += `
+        <p>${reply.text} <button onclick="voteReply(${reply.id})">投票</button></p>
+      `;
+  });
+}
 
-// // 投稿を取得する関数
-// function loadPosts() {
-//   fetch("http://127.0.0.1:5000/posts")
-//     .then((response) => response.json())
-//     .then((posts) => {
-//       const postList = document.getElementById("postList");
-//       postList.innerHTML = ""; // 既存の投稿をリセット
-//       posts.forEach((post) => {
-//         const postElement = document.createElement("div");
-//         postElement.innerHTML = `
-//                     <p>${post.text}</p>
-//                     <button onclick="likePost(${post.id})">いいね</button>
-//                     <span>いいね数: ${post.likes}</span>
-//                 `;
-//         postList.appendChild(postElement);
-//       });
-//     })
-//     .catch((error) => console.error("エラー:", error));
-// }
-// // いいねを送信する関数
-// function likePost(postId) {
-//   fetch(`http://127.0.0.1:5000/posts/${postId}/like`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   })
-//     .then((response) => response.json())
-//     .then((data) => {
-//       if (data.message === "Post liked successfully") {
-//         alert("いいねしました！");
-//         // 画面を更新
-//         loadPosts();
-//       } else {
-//         alert("いいねに失敗しました");
-//       }
-//     })
-//     .catch((error) => console.error("エラー:", error));
-// }
-// // 初期に投稿を読み込む
-// loadPosts();
+// 回答に投票
+async function voteReply(replyId) {
+  await fetch(`/replies/${replyId}/vote`, { method: "POST" });
+  loadReplies(); // 更新
+}
 
-// // いいねを送信する関数
-// function likePost(postId) {
-//   fetch(`http://127.0.0.1:5000/posts/${postId}/like`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   })
-//     .then((response) => response.json())
-//     .then((data) => {
-//       if (data.message === "Post liked successfully") {
-//         alert("いいねしました！");
-//         // 画面を更新
-//         loadPosts();
-//       } else {
-//         alert("いいねに失敗しました");
-//       }
-//     })
-//     .catch((error) => console.error("エラー:", error));
-// }
+// フォーム送信時の処理
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .getElementById("postForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+      submitPost();
+    });
+
+  loadPosts(); // 初期ロード
+});
