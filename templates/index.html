@@ -2,12 +2,20 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- フォント　googlefont→ get embed code →html-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap"
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap"
       rel="stylesheet"
     />
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
@@ -28,7 +36,7 @@
 
     <h2>大喜利回答</h2>
     <div>
-      <button onclick="loadAllReplies('newest')">新しい順</button>
+      <button onclick="loadAllReplies('newest')">全てのリプライ</button>
       <button onclick="loadAllReplies('most-voted')">ランキング</button>
     </div>
     <div id="replies"></div>
