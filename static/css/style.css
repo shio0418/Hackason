@@ -4,7 +4,7 @@
 @media screen and (max-width: 10000px) {
   /* 全体のスタイル */
   body {
-    font-family: sans-serif;
+    /* font-family: sans-serif; */
     margin: 0;
     background-color: #f5f9ff;
     color: #333;
@@ -23,7 +23,7 @@
 
   /* セクションタイトル */
   h2 {
-    font-family: "Dela Gothic One", sans-serif;
+    /* font-family: sans-serif; */
     color: #0077cc;
     margin-top: 20px;
     font-size: 1.2em;
@@ -66,6 +66,9 @@
 
   .post_btn:hover {
     background-color: #005bbb;
+  }
+  .post-text {
+    font-family: "Darumadrop one";
   }
 
   /* 投稿一覧 */
@@ -116,7 +119,7 @@
   }
 
   /* クリックしたときに色を赤に変更 */
-  .like-btn:active{
+  .like-btn:active {
     color: red;
   }
 

@@ -11,6 +11,21 @@ async function submitPost() {
   loadPosts(); // 投稿後に一覧を更新
 }
 
+function replaceUnsupportedCharacters(element) {
+  const text = element.innerText;
+  const supportedText = text.replace(
+    /[\u4e00-\u9faf\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F]/g,
+    "?"
+  );
+  element.innerText = supportedText;
+}
+
+// 初期処理で文字列を置き換える
+document.addEventListener("DOMContentLoaded", () => {
+  // 投稿がロードされた後に漢字を?に置き換える
+  loadPosts();
+});
+
 // 投稿一覧を取得して表示
 async function loadPosts() {
   const response = await fetch("/posts");
@@ -19,27 +34,42 @@ async function loadPosts() {
   postsDiv.innerHTML = "";
 
   posts.forEach((post) => {
-    postsDiv.innerHTML += `
-        <div class="post_list" id="post-${post.id}">
-          <p class="post_date">${post.created_at}</p>
-          <p class="post-text">${post.text}</p>
-          <div class="actions">
-            <button class="like-btn" onclick="likePost(${post.id})">
-              <span class="material-symbols-outlined">favorite</span>
-            </button>
-            <span class="like-count">${post.likes} いいね</span>
-            <button class="reply-btn" onclick="toggleReplyForm(${post.id})">リプライ</button>
-            <button class="reply-btn" onclick="loadReplies(${post.id})">リプライを見る</button>
-          </div>
-          <div id="replyForm-${post.id}" class="reply-form" style="display: none;">
-            <textarea id="replyText-${post.id}" placeholder="リプライを入力"></textarea>
-            <button onclick="submitReply(${post.id})">送信</button>
-          </div>
-          <div id="replies-${post.id}" class="replies-container" style="display: none;"></div> <!-- リプライ表示用のdiv -->
-        </div>
-      `;
+    const postElement = document.createElement("div");
+    postElement.classList.add("post_list");
+    postElement.id = `post-${post.id}`;
+
+    // 投稿内容を追加
+    postElement.innerHTML = `
+      <p class="post_date">${post.created_at}</p>
+      <p class="post-text">${post.text}</p>
+      <div class="actions">
+        <button class="like-btn" onclick="likePost(${post.id})">
+          <span class="material-symbols-outlined like_heart">favorite</span>
+        </button>
+        <span class="like-count">${post.likes} いいね</span>
+        <button class="reply-btn" onclick="toggleReplyForm(${post.id})">
+          <span class="material-symbols-outlined">reply</span>
+        </button>
+        <button class="reply-btn" onclick="loadReplies(${post.id})">リプライを見る</button>
+      </div>
+      <div id="replyForm-${post.id}" class="reply-form" style="display: none;">
+        <textarea id="replyText-${post.id}" placeholder="リプライを入力"></textarea>
+        <button onclick="submitReply(${post.id})">
+          <span class="material-symbols-outlined">send</span>
+        </button>
+      </div>
+      <div id="replies-${post.id}" class="replies-container" style="display: none;"></div> <!-- リプライ表示用のdiv -->
+    `;
+
+    // 投稿テキストを?に置き換える
+    replaceUnsupportedCharacters(postElement.querySelector(".post-text"));
+
+    // 投稿を画面に追加
+    postsDiv.appendChild(postElement);
   });
 }
+
+// その他の関数（いいね、リプライ表示など）は省略していますが、そのままで動作します
 
 // いいね機能
 async function likePost(postId) {

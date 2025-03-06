@@ -28,13 +28,14 @@ def insert_post(text):
     conn.commit()
     conn.close()
 
-def insert_post_reply(post_id,text):
+def insert_post_reply(post_id, text):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 現在の日時
-    c.execute('INSERT INTO posts (text, created_at) VALUES (?, ?)', (text, created_at))
+    c.execute('INSERT INTO replies (post_id, text, created_at) VALUES (?, ?, ?)', (post_id, text, created_at))
     conn.commit()
     conn.close()
+
 
 # 投稿を取得
 @app.route("/posts", methods=["GET"])
@@ -133,7 +134,13 @@ def get_all_replies():
     print("Rows:", rows)
 
     replies = [{"id": row[0], "text": row[2], "votes": row[3], "created_at": row[4]} for row in rows]
+    def parse_datetime(value):
+        return datetime.strptime(value, "%Y-%m-%d %H:%M:%S") if value else datetime.min
 
+    replies = [
+        {"id": row[0], "text": row[2], "votes": row[3], "created_at": parse_datetime(row[4])}
+        for row in rows
+    ]
     # 並べ替え
     if sort_order == 'most-voted':
         replies.sort(key=lambda x: x['votes'], reverse=True)
