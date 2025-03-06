@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- フォント　googlefont→ get embed code →html-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <title>大喜利SNS</title>
+  </head>
+  <body>
+    <h2>投稿一覧</h2>
+    <div id="#postlist">
+      <div class="post_list">
+        <p class="post_date">2025-03-06 12:00</p>
+        <p class="post-text">煮物の角煮を質点としてとして扱っている</p>
+        <div class="actions">
+          <button class="like-btn" onclick="likePost(this)">
+            <span class="material-symbols-outlined like_heart">favorite</span>
+          </button>
+          <span class="like-count">0 いいね</span>
+        </div>
+      </div>
+
+      <div class="post_list">
+        <p class="post_date">2025-03-06 12:10</p>
+        <p class="post-text">換気扇がよく見るとドラフトのやつ</p>
+        <div class="actions">
+          <button class="like-btn" onclick="likePost(this)">
+            <span class="material-symbols-outlined like_heart">favorite</span>
+          </button>
+          <span class="like-count">0 いいね</span>
+        </div>
+      </div>
+
+      <div class="post_list">
+        <p class="post_date">2025-03-06 12:20</p>
+        <p class="post-text">お母さんが着てる服の２辺の長さが等しい</p>
+        <div class="actions">
+          <button class="like-btn" onclick="likePost(this)">
+            <span class="material-symbols-outlined like_heart">favorite</span>
+          </button>
+          <span class="like-count">0 いいね</span>
+        </div>
+      </div>
+
+      <div class="post_list">
+        <p class="post_date">2025-03-06 12:30</p>
+        <p class="post-text">
+          「おやつはドーナツよ」と言われたがマグカップが出てきた
+        </p>
+        <div class="actions">
+          <button class="like-btn" onclick="likePost(this)">
+            <span class="material-symbols-outlined like_heart">favorite</span>
+          </button>
+          <span class="like-count">0 いいね</span>
+        </div>
+      </div>
+
+      <div class="post_list">
+        <p class="post_date">サッカー好きの我が子にフラーレンをプレゼント</p>
+        <div class="actions">
+          <button class="like-btn" onclick="likePost(this)">
+            <span class="material-symbols-outlined like_heart">favorite</span>
+          </button>
+          <span class="like-count">0 いいね</span>
+        </div>
+      </div>
+      <div class="post_list">
+        <p class="post_date">
+          お風呂で「１、２、３…」と数えていたら最終的に和が-1/12
+        </p>
+        <div class="actions">
+          <button class="like-btn" onclick="likePost(this)">
+            <span class="material-symbols-outlined like_heart">favorite</span>
+          </button>
+          <span class="like-count">0 いいね</span>
+        </div>
+      </div>
+    </div>
+    <script>
+      // いいね機能（カウント加算）
+      function likePost(button) {
+        const likeCountElement = button.nextElementSibling; // いいね数を表示する要素を取得
+        let likeCount = parseInt(likeCountElement.innerText.split(" ")[0], 10); // 現在の「いいね」数を取得
+        likeCount += 1; // 1つ増加
+        likeCountElement.innerText = `${likeCount} いいね`; // 更新された「いいね」数を表示
+      }
+    </script>
+  </body>
+</html>
