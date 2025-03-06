@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    
+
     <!-- フォント　googlefont→ get embed code →html-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -10,31 +10,11 @@
       href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap"
       rel="stylesheet"
     />
-    
-    <!-- いいねボタン　♡ -->
-    <link 
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=favorite"
-    />
-        <!--　リプ  -->
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=mode_comment"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
     />
 
-    <!-- 投票 -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=how_to_vote"
-    />
-    
-    <!-- 投稿する -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=send"
-    />
-    
-    
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
@@ -59,16 +39,6 @@
       <button onclick="loadAllReplies('most-voted')">ランキング</button>
     </div>
     <div id="replies"></div>
-
-    <!-- いいねボタンアイコン -->
-    <button class="like-btn">
-      <span class="material-symbols-outlined">Favorite</span> いいね
-    </button>
-
-    <!-- 投票ボタン -->
-    <button class="vote-button">
-      <span class="material-symbols-outlined">How_To_Vote</span> 投票
-    </button>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>

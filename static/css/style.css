@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
+
 /* スマホ用デザイン（680px以下） */
 @media screen and (max-width: 10000px) {
   /* 全体のスタイル */
@@ -114,7 +116,7 @@
   }
 
   /* クリックしたときに色を赤に変更 */
-  .like-btn:active{
+  .like-btn:active {
     color: red;
   }
 
@@ -172,5 +174,18 @@
 
   .vote-button:hover {
     text-decoration: none;
+  }
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* 必要に応じて変更 */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
   }
 }
