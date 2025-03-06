@@ -5,6 +5,13 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = 'key'
 
+# DB初期化
+def init_db():
+    with sqlite3.connect("database.db") as conn:
+        c = conn.cursor()
+        c.execute("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY, text TEXT, likes INTEGER DEFAULT 0, created_at TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS replies (id INTEGER PRIMARY KEY, post_id INTEGER, text TEXT, votes INTEGER DEFAULT 0, created_at TEXT)")
+        conn.commit()
 
 init_db()
 
@@ -81,42 +88,6 @@ def add_reply():
 
     return jsonify({'message': 'Reply created successfully'}), 201
 
-
-# いいね
-@app.route("/posts/<int:post_id>/like", methods=["POST"])
-def like_post(post_id):
-    # 1. ログイン中のユーザーidを取得、取得できなければエラー
-    user_id = session.get('user_id') 
-    if not user_id:
-        return jsonify({'message': 'User not logged in'}), 401
-
-    # 2. 投稿が存在するかを確認する（postsテーブルの該当するpost_idを検索）
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-
-    c.execute("SELECT * FROM posts WHERE id = ?", (post_id,))
-    post = c.fetchone()
-    
-    if not post:
-        conn.close()
-        #投稿が存在しない場合のエラーメッセージ
-        return jsonify({'error': 'Post not found'}), 404
-
-
-    c.execute("SELECT * FROM likes WHERE id = ? AND post_id = ?", (user_id, post_id))
-    exsisting_like = c.fetchone()
-    # 3. いいねをすでにしている場合のエラーメッセージ
-    if exsisting_like:
-        conn.close()
-        return jsonify({'message': 'You have already liked this post'}), 400
-
-    c.execute("INSERT INTO likes (user_id, post_id) VALUES (?, ?)", (user_id, post_id))
-    c. execute("UPDATE posts SET likes = likes + 1 WHERE id = ?", (post_id,))
-    conn.commit()
-    conn.close()
-    return jsonify({'messaage': 'Post liked sucessfully'}), 200
-
-"""
 # いいね
 @app.route("/posts/<int:post_id>/like", methods=["POST"])
 def like_post(post_id):
@@ -136,7 +107,6 @@ def like_post(post_id):
         #投稿が存在しない場合のエラーメッセージ
         return jsonify({'error': 'Post not found'}), 404
     return
-"""
 
 # リプライに投票
 @app.route("/replies/<int:reply_id>/vote", methods=["POST"])
