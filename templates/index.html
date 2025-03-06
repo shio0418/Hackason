@@ -2,21 +2,33 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <link
+    rel="stylesheet"
+    href="https://fonts.google.com/share?selection.family=Murecho:wght@100..900"
+  />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
     <title>大喜利SNS</title>
   </head>
   <body>
     <h1>大喜利SNS</h1>
 
+    <h2>最近何があった？</h2>
+    <form id="postForm">
+      <textarea id="postText" placeholder="おもろいこと書いて"></textarea>
+      <button class="post_btn" type="submit">投稿する</button>
+    </form>
+
     <h2>投稿一覧</h2>
     <div id="postlist"></div>
 
-    <h2>悩みを投稿</h2>
-    <form id="postForm">
-      <textarea id="postText" placeholder="何か投稿しよう！"></textarea>
-      <button type="submit">投稿する</button>
-    </form>
-
     <h2>大喜利回答</h2>
+    <div>
+      <button onclick="loadAllReplies('newest')">新しい順</button>
+      <button onclick="loadAllReplies('most-voted')">ランキング</button>
+    </div>
     <div id="replies"></div>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
