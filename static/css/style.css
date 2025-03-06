@@ -115,6 +115,11 @@
     transform: scale(1.1);
   }
 
+  /* クリックしたときに色を赤に変更 */
+  .like-btn:active{
+    color: red;
+  }
+
   .like-count {
     font-size: 0.9em;
     color: #666;
