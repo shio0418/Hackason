@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- フォント　googlefont→ get embed code →html-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <title>大喜利SNS</title>
+  </head>
+  <body>
+    <!-- 変更-->
+    <h2>お題募集中！</h2>
+    <form id="postForm">
+      <textarea id="postText" placeholder="おもろいこと書いて"></textarea>
+      <button class="post_btn" type="submit">投稿する</button>
+    </form>
+
+    <div id="postlist">
+    <div class="post_list">
+        <p class="post_date">2025-03-06 12:00</p>
+        <p class="post-text">こんな理科の先生は嫌だ</p>
+        <div class="actions">
+        <button class="like-btn" onclick="likePost(this)">
+            <span class="material-symbols-outlined like_heart">favorite</span>
+        </button>
+        <span class="like-count">0 いいね</span>
+        </div>
+    </div>
+
+    <h2>投稿一覧</h2>
+    <div id="postlist"></div>
+    <h2>先週のけっかはっぴょう</h2>
+    <div class="ranking-container">
+        <div class="theme-box">
+          <h2>先週のテーマ</h2>
+          <p class="theme-text">ウチのオカン、理系やな。なぜそう思った？</p>
+        </div>
+      
+        <div class="answer-box">
+          <h2>1位になった回答</h2>
+          <div class="answer-content">
+            <p class="answer-text">煮物の角煮を質点としてとして扱っている</p>
+          </div>
+        </div>
+      </div>
+
+    <div class="boshuu">
+    <a href="{{ url_for('home') }}">
+        ホームに戻る>
+    </a>
+    </div>
+
+      
+
+    <script>
+      // いいね機能（カウント加算）
+      function likePost(button) {
+        const likeCountElement = button.nextElementSibling; // いいね数を表示する要素を取得
+        let likeCount = parseInt(likeCountElement.innerText.split(" ")[0], 10); // 現在の「いいね」数を取得
+        likeCount += 1; // 1つ増加
+        likeCountElement.innerText = `${likeCount} いいね`; // 更新された「いいね」数を表示
+      }
+    </script>
+  </body>
+</html>

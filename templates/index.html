@@ -24,6 +24,7 @@
   </head>
   <body>
     <h1>？？？SNS</h1>
+    <h2>今週の理系大喜利</h2>
     <h4 class="today_theme">
       理系ならわかるはず　-- ウチのオカン、理系やな。なぜそう思った？ --
     </h4>
@@ -31,7 +32,10 @@
       <textarea id="answerText" placeholder=""></textarea>
       <div class="btns">
         <button class="answer_btn" type="submit">投稿する</button>
-        <button class="jump_page"><a href="list.html">回答を見る</a></button>
+        <a href="{{ url_for('list_page') }}">
+          <!-- class buttonついか-->
+          <button class="post_btn" type = "button">回答を見る</button>
+        </a>
       </div>
     </form>
 
@@ -45,9 +49,16 @@
     <div id="postlist"></div>
 
     <div class="boshuu">
+      <a href="{{ url_for('odai_page') }}">
+        お題投稿はこちら>
+      </a>
+    </div>
+
+    <!--
+    <div class="boshuu">
       <a href="#">お題投稿はこちら ></a>
     </div>
-    <!-- <h2>大喜利回答</h2>
+     <h2>大喜利回答</h2>
     <div>
       <button onclick="loadAllReplies('newest')">全てのリプライ</button>
       <button onclick="loadAllReplies('most-voted')">ランキング</button>
