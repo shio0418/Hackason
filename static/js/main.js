@@ -25,6 +25,7 @@ async function loadPosts() {
           <p class="post-text">${post.text}</p>
           <div class="actions">
             <button class="like-btn" onclick="likePost(${post.id})">
+              <span class="material-symbols-outlined">favorite</span>
             </button>
             <span class="like-count">${post.likes} いいね</span>
             <button class="reply-btn" onclick="toggleReplyForm(${post.id})">リプライ</button>
@@ -71,7 +72,9 @@ async function loadReplies(postId) {
         <div class="reply">
           <p>${reply.text}</p>
           <a href="#post-${postId}" class="post-link">この投稿に戻る</a>
-          <button onclick="voteReply(${reply.id})">投票</button>
+          <button onclick="voteReply(${reply.id})">
+            <span class="material-symbols-outlined">How_To_Vote</span> 投票
+          </button>
         </div>
       `;
     });
@@ -104,7 +107,9 @@ async function loadAllReplies(sortOrder) {
           <p>${reply.text}</p>
           <p>投票数: ${reply.votes}</p>
           <p><small>投稿日時: ${reply.created_at}</small></p>
-          <button onclick="voteReply(${reply.id})">投票</button>
+          <button onclick="voteReply(${reply.id})">
+            <span class="material-symbols-outlined">How_To_Vote</span>
+          </button>
         </div>
       `;
     });
