@@ -24,7 +24,8 @@ async function loadPosts() {
           <p class="post_date">${post.created_at}</p>
           <p class="post-text">${post.text}</p>
           <div class="actions">
-            <button class="like-btn" onclick="likePost(${post.id})">♡</button>
+            <button class="like-btn" onclick="likePost(${post.id})">
+            </button>
             <span class="like-count">${post.likes} いいね</span>
             <button class="reply-btn" onclick="toggleReplyForm(${post.id})">リプライ</button>
             <button class="reply-btn" onclick="loadReplies(${post.id})">リプライを見る</button>
