@@ -2,9 +2,59 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- フォント　googlefont→ get embed code →html-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
     <title>大喜利SNS</title>
   </head>
   <body>
-    <h1 class="title">大喜利SNS</h1>
+    <h1>？？？SNS</h1>
+    <h4 class="today_theme">
+      理系ならわかるはず　-- ウチのオカン、理系やな。なぜそう思った？ --
+    </h4>
+    <form id="answerForm">
+      <textarea id="answerText" placeholder=""></textarea>
+      <div class="btns">
+        <button class="answer_btn" type="submit">投稿する</button>
+        <button class="jump_page"><a href="list.html">回答を見る</a></button>
+      </div>
+    </form>
+
+    <h2>最近何があった？</h2>
+    <form id="postForm">
+      <textarea id="postText" placeholder="おもろいこと書いて"></textarea>
+      <button class="post_btn" type="submit">投稿する</button>
+    </form>
+
+    <h2>投稿一覧</h2>
+    <div id="postlist"></div>
+
+    <div class="boshuu">
+      <a href="#">お題投稿はこちら ></a>
+    </div>
+    <!-- <h2>大喜利回答</h2>
+    <div>
+      <button onclick="loadAllReplies('newest')">全てのリプライ</button>
+      <button onclick="loadAllReplies('most-voted')">ランキング</button>
+    </div>
+
+    <div id="replies"></div> -->
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>
