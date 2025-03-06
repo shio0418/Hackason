@@ -151,18 +151,6 @@ def get_all_replies():
     conn.close()
     return jsonify(replies)
 
-
-
-
-###修正###
-def insert_answer(text):
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 現在の日時
-    c.execute('INSERT INTO posts (text, created_at) VALUES (?, ?)', (text, created_at))
-    conn.commit()
-    conn.close()
-
 # list.htmlを開くために
 @app.route('/list')
 def list_page():
