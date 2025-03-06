@@ -19,11 +19,14 @@ async function loadPosts() {
   postsDiv.innerHTML = "";
   posts.forEach((post) => {
     postsDiv.innerHTML += `
-        <p>
-          ${post.text}
-          <button onclick="likePost(${post.id})">♡</button> ${post.likes} いいね
-          <button onclick="loadReplies(${post.id})">回答を見る</button>
-        </p>
+        <div class="post_list">
+          <p class="post-text">${post.text}</p>
+          <div class="actions">
+            <button class="like-btn" onclick="likePost(${post.id})">♡</button>
+            <span class="like-count">${post.likes} いいね</span>
+            <button class="reply-btn" onclick="loadReplies(${post.id})">回答を見る</button>
+          </div>
+        </div>
       `;
   });
 }
