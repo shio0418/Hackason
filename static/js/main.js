@@ -107,7 +107,9 @@ async function loadAllReplies(sortOrder) {
           <p>${reply.text}</p>
           <p>投票数: ${reply.votes}</p>
           <p><small>投稿日時: ${reply.created_at}</small></p>
-          <button onclick="voteReply(${reply.id})">投票</button>
+          <button onclick="voteReply(${reply.id})">
+            <span class="material-symbols-outlined">How_To_Vote</span>
+          </button>
         </div>
       `;
     });

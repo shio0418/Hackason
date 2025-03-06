@@ -5,7 +5,6 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = 'key'
 
-
 # DB初期化
 def init_db():
     with sqlite3.connect("database.db") as conn:
@@ -13,7 +12,6 @@ def init_db():
         c.execute("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY, text TEXT, likes INTEGER DEFAULT 0, created_at TEXT)")
         c.execute("CREATE TABLE IF NOT EXISTS replies (id INTEGER PRIMARY KEY, post_id INTEGER, text TEXT, votes INTEGER DEFAULT 0, created_at TEXT)")
         conn.commit()
-
 init_db()
 
 # ルートURLにアクセスしたときの処理
