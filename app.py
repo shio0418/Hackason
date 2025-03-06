@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-
+from datetime import datetime
 import sqlite3
 # Flaskアプリケーションのインスタンスを作成
 app = Flask(__name__)
@@ -24,14 +24,16 @@ def home():
 def insert_post(text):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    c.execute('INSERT INTO posts (text) VALUES (?)', (text,))
+    created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 現在の日時
+    c.execute('INSERT INTO posts (text, created_at) VALUES (?, ?)', (text, created_at))
     conn.commit()
     conn.close()
 
 def insert_post_reply(post_id,text):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    c.execute('INSERT INTO replies (post_id,text) VALUES (?,?)', (post_id,text,))
+    created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 現在の日時
+    c.execute('INSERT INTO posts (text, created_at) VALUES (?, ?)', (text, created_at))
     conn.commit()
     conn.close()
 
@@ -39,12 +41,13 @@ def insert_post_reply(post_id,text):
 @app.route("/posts", methods=["GET"])
 def get_posts():
     conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row #辞書型で取得
+    conn.row_factory = sqlite3.Row
     c = conn.cursor()
     c.execute("SELECT * FROM posts ORDER BY id DESC")
-    posts = [{"id": row[0], "text": row[1], "likes": row[2]} for row in c.fetchall()]
+    posts = [{"id": row[0], "text": row[1], "likes": row[2], "created_at": row[3]} for row in c.fetchall()]
     conn.close()
     return jsonify(posts)
+
 # 投稿
 @app.route("/posts", methods=["POST"])
 def add_post():
@@ -58,19 +61,32 @@ def add_post():
         return jsonify ({'message': 'No text provided'}), 400
     return
     
-# 大喜利回答
+# 特定の投稿に対するリプライを取得
+@app.route("/replies/<int:post_id>", methods=["GET"])
+def get_replies(post_id):
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    c.execute("SELECT * FROM replies WHERE post_id = ? ORDER BY id DESC", (post_id,))
+    replies = [{"id": row[0], "text": row[2], "votes": row[3]} for row in c.fetchall()]
+    conn.close()
+    return jsonify(replies)
+
+# 回答
 @app.route("/replies", methods=["POST"])
 def add_reply():
-    data = request.json
+    data = request.get_json()
     text = data.get('text')
     post_id = data.get('post_id')
-    if post_id < 0:
-        return jsonify({'message': 'Invalid post_id'}), 400
-    elif text:
-        insert_post_reply(post_id,text)
-        return jsonify({'message': 'Post created successfully'}), 201
-    else:
-        return jsonify ({'message': 'No text provided'}), 400
+    if not post_id or not text:
+        return jsonify({'message': 'Invalid input'}), 400
+
+    with sqlite3.connect('database.db') as conn:
+        c = conn.cursor()
+        c.execute("INSERT INTO replies (post_id, text) VALUES (?, ?)", (post_id, text))
+        conn.commit()
+
+    return jsonify({'message': 'Reply created successfully'}), 201
 
 # いいね
 @app.route("/posts/<int:post_id>/like", methods=["POST"])
@@ -91,6 +107,42 @@ def like_post(post_id):
         #投稿が存在しない場合のエラーメッセージ
         return jsonify({'error': 'Post not found'}), 404
     return
+
+# リプライに投票
+@app.route("/replies/<int:reply_id>/vote", methods=["POST"])
+def vote_reply(reply_id):
+    with sqlite3.connect('database.db') as conn:
+        c = conn.cursor()
+        c.execute("UPDATE replies SET votes = votes + 1 WHERE id = ?", (reply_id,))
+        conn.commit()
+    return jsonify({'message': 'Reply voted successfully'}), 200
+
+# すべてのリプライを取得（並べ替え機能付き）
+@app.route("/replies", methods=["GET"])
+def get_all_replies():
+    sort_order = request.args.get('sort_order', 'newest')  # デフォルトは新しい順
+
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+
+    # リプライを取得
+    c.execute("SELECT * FROM replies")  # カラムを全て取得
+    rows = c.fetchall()
+
+    # デバッグ用に結果を確認
+    print("Rows:", rows)
+
+    replies = [{"id": row[0], "text": row[2], "votes": row[3], "created_at": row[4]} for row in rows]
+
+    # 並べ替え
+    if sort_order == 'most-voted':
+        replies.sort(key=lambda x: x['votes'], reverse=True)
+    elif sort_order == 'newest':
+        replies.sort(key=lambda x: x['created_at'], reverse=True)
+
+    conn.close()
+    return jsonify(replies)
 
 
 # アプリケーションを実行
